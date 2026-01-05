@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Python Community Discussion
+    url: https://discuss.python.org/
+    about: For general Python discussions

@@ -1,0 +1,45 @@
+name: Bug Report
+description: Report a bug or problem with Planet Python
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please provide as much detail as possible.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: Describe the bug or problem you're experiencing
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: "e.g., Windows 11, macOS 14, Ubuntu 22.04"
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: "e.g., Chrome 120, Firefox 121, Safari 17"
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Include error messages, screenshots, or any other relevant information
+      placeholder: "Paste error messages or drag and drop screenshots here"
