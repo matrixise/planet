@@ -1,0 +1,68 @@
+name: Add or Edit RSS Feed
+description: Request to add a new feed or edit an existing feed on Planet Python
+title: "[Feed Request] "
+labels: ["feed-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in adding your feed to Planet Python!
+        Please fill out the information below.
+
+  - type: input
+    id: name
+    attributes:
+      label: Name/Blog Name
+      description: Your name or blog name
+      placeholder: "e.g., John Doe or John's Python Blog"
+    validations:
+      required: true
+
+  - type: input
+    id: feed-url
+    attributes:
+      label: Feed URL
+      description: Your RSS or Atom feed URL (Python-specific content only)
+      placeholder: "https://example.com/feed.xml"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request Type
+      options:
+        - Add new feed
+        - Edit existing feed
+    validations:
+      required: true
+
+  - type: input
+    id: old-url
+    attributes:
+      label: Old Feed URL (for edits only)
+      description: If you're editing an existing feed, provide the current URL
+      placeholder: "https://old-example.com/feed.xml"
+
+  - type: checkboxes
+    id: validations
+    attributes:
+      label: Required Validations
+      description: Please confirm all the following requirements
+      options:
+        - label: My feed is valid (checked using https://validator.w3.org/feed/)
+          required: true
+        - label: My feed is Python-specific (filtered by tag/category)
+          required: true
+        - label: I only post Python-related content or content interesting for the Python community
+          required: true
+        - label: My feed contains only English language content
+          required: true
+        - label: I understand it may take a few hours for my feed to start being fetched
+          required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other information you'd like to share
