@@ -1,0 +1,78 @@
+name: Validate Feed Request
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write    # Required to post comments and add labels
+  contents: read   # Required to read config.ini
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+  validate-feed:
+    # Only run on issues with the 'feed-request' label
+    if: contains(github.event.issue.labels.*.name, 'feed-request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install feedparser requests
+
+      - name: Make scripts executable
+        run: chmod +x .github/scripts/*.py
+
+      - name: Parse issue and validate feed
+        id: validate
+        continue-on-error: true
+        run: |
+          python .github/scripts/validate_feed.py \
+            --issue-body "${{ github.event.issue.body }}" \
+            --config-path config/config.ini \
+            --output validation_result.json
+
+      - name: Generate comment from results
+        if: always()
+        run: |
+          python .github/scripts/format_comment.py \
+            --input validation_result.json \
+            --output validation_comment.md
+
+      - name: Post validation comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Try to edit the last comment if it exists, otherwise create new
+          gh issue comment ${{ github.event.issue.number }} \
+            --body-file validation_comment.md \
+            --edit-last || gh issue comment ${{ github.event.issue.number }} \
+            --body-file validation_comment.md
+
+      - name: Add validation labels
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LABELS=$(python .github/scripts/get_labels.py validation_result.json)
+          if [ -n "$LABELS" ]; then
+            echo "Adding labels: $LABELS"
+            gh issue edit ${{ github.event.issue.number }} --add-label "$LABELS"
+          else
+            echo "No labels to add"
+          fi
