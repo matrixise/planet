@@ -2,7 +2,7 @@ name: Validate Feed Request
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, labeled]
 
 permissions:
   issues: write    # Required to post comments and add labels
