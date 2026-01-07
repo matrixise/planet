@@ -17,6 +17,10 @@ jobs:
     if: contains(github.event.issue.labels.*.name, 'feed-request')
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Prevent duplicate runs when issue is created with label (opened + labeled events)
+    concurrency:
+      group: validate-feed-${{ github.event.issue.number }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout repository
